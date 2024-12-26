@@ -12,18 +12,18 @@ class Book(models.Model):
         validators=[MaxValueValidator(5), MinValueValidator(1)]
     )
     is_bestseller = models.BooleanField(default=False)
-    slug = models.SlugField(default="", db_index=True)
+    slug = models.SlugField(default="", db_index=True, blank=True)
 
     def __str__(self):
-        return f"{self.title} by {self.author} - {self.rating}"
+        return f'"{self.title}" by {self.author}'
 
-    def save(self, *args, **kwargs):
-        title_words = self.title.split(" ")
-        lim_title = (
-            " ".join(title_words[:9]) if len(title_words) > 1 else title_words[0]
-        )
-        self.slug = slugify(lim_title)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     title_words = self.title.split(" ")
+    #     lim_title = (
+    #         " ".join(title_words[:9]) if len(title_words) > 1 else title_words[0]
+    #     )
+    #     self.slug = slugify(lim_title)
+    #     super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse("book-details", args=[self.slug])
